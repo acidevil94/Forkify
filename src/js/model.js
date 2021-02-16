@@ -23,6 +23,6 @@ export const loadRecipe = async function (id) {
       ingredients: recipe.ingredients,
     };
   } catch (err) {
-    console.error(`Error while loading recipe: ${err}`);
+    console.error(`Error while loading recipe: '${err}'`);
   }
 };
