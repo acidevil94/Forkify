@@ -1,9 +1,14 @@
 import * as model from "./model.js";
 import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
+import resultsView from "./views/resultsView.js";
 
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+
+if (module.hot) {
+  module.hot.accept();
+}
 
 // https://forkify-api.herokuapp.com/v2
 
@@ -19,7 +24,7 @@ const controlRecipes = async function () {
       console.log("No ID found in location");
       return;
     }
-    console.log(`Fetching recipe with id ${id}`);
+    console.log(`controlRecipes(): Fetching recipe with id ${id}`);
     recipeView.renderSpinner();
     await model.loadRecipe(id);
     // Render recipe
@@ -32,14 +37,15 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
-    const query = searchView.getQuery();
+    const query = searchView.getQueryAndCleanInput();
     if (!query) {
       console.log("controlSearchResults(): No query specified");
       return;
     }
+    resultsView.renderSpinner();
     await model.loadSearchResults(query);
 
-    searchView.clearInput();
+    resultsView.render(model.state.search.results);
   } catch (err) {
     console.error(err);
   }
